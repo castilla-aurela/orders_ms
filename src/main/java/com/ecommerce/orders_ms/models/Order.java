@@ -1,9 +1,11 @@
 package com.ecommerce.orders_ms.models;
 
+import org.springframework.data.annotation.Id;
+
 import java.util.Date;
 
 public class Order {
-
+    @Id
     private String orderId;
     private Date date;
     private Integer total;
