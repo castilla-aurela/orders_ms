@@ -1,22 +1,24 @@
 package com.ecommerce.orders_ms.models;
 
 import org.springframework.data.annotation.Id;
+import com.ecommerce.orders_ms.models.DetailOrder;
 
 import java.util.Date;
+import java.util.List;
 
 public class Order {
     @Id
     private String orderId;
     private Date date;
     private Integer total;
-    private String id_detailProducts;
+    private List<DetailOrder> detailProducts;
     private String status;
 
-    public Order(String orderId, Date date, Integer total, String id_detailProducts, String status) {
+    public Order(String orderId, Date date, Integer total, List<DetailOrder> detailProducts, String status) {
         this.orderId = orderId;
         this.date = date;
         this.total = total;
-        this.id_detailProducts = id_detailProducts;
+        this.detailProducts = detailProducts;
         this.status = status;
     }
 
@@ -44,12 +46,12 @@ public class Order {
         this.total = total;
     }
 
-    public String getId_detailProducts() {
-        return id_detailProducts;
+    public List<DetailOrder> getDetailProducts() {
+        return detailProducts;
     }
 
-    public void setId_detailProducts(String id_detailProducts) {
-        this.id_detailProducts = id_detailProducts;
+    public void setDetailProducts(List<DetailOrder> detailProducts) {
+        this.detailProducts = detailProducts;
     }
 
     public String getStatus() {
