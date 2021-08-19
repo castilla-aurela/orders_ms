@@ -1,0 +1,140 @@
+{
+	"info": {
+		"_postman_id": "c0c722b3-f680-4bd9-85b8-44ae8a6a3959",
+		"name": "compras",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Obtener compra1",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/orders/001",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"orders",
+						"001"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Obtener compras",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/orders",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": " {\r\n        \"orderId\": \"001\",\r\n        \"date\": \"2021-08-19T04:53:41.889+00:00\",\r\n        \"total\": 700000,\r\n        \"detailProducts\": [\r\n            {\r\n                \"idProduct\": \"0001\",\r\n                \"quantity\": 12,\r\n                \"price\": 50000,\r\n                \"subTotal\": 50000\r\n            },\r\n             {\r\n                \"idProduct\": \"0002\",\r\n                \"quantity\": 12,\r\n                \"price\": 50000,\r\n                \"subTotal\": 50000\r\n            }\r\n        ],\r\n        \"status\": \"in-progress\"\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/orders/001",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"orders",
+						"001"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/orders/001",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"orders",
+						"001"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "crear Compras",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": " {\r\n        \"orderId\": \"001\",\r\n        \"date\": \"2021-08-19T04:53:41.889+00:00\",\r\n        \"total\": 700000,\r\n        \"detailProducts\": [\r\n            {\r\n                \"idProduct\": \"0001\",\r\n                \"quantity\": 12,\r\n                \"price\": 50000,\r\n                \"subTotal\": 50000\r\n            },\r\n             {\r\n                \"idProduct\": \"0001\",\r\n                \"quantity\": 12,\r\n                \"price\": 50000,\r\n                \"subTotal\": 50000\r\n            }\r\n        ]\r\n        \r\n        }\r\n        ",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/orders",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Finish Order",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/orders/finish/001",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"orders",
+						"finish",
+						"001"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

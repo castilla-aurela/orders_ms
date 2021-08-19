@@ -6,9 +6,7 @@ import com.ecommerce.orders_ms.models.Order;
 import com.ecommerce.orders_ms.repositories.OrderRepository;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RestController
 
@@ -35,18 +33,62 @@ public class OrderController {
                 .orElseThrow(()->new OrderNotFoundException("No se encontró una orden con el orderId: " + orderId));
     }
 
-    @PostMapping("/newOrder")
+    @GetMapping("/orders")
+    List<Order> getAllOrders(){
+        return orderRepository.findAll();
+    }
+
+    @PostMapping("/orders")
     Order newOrder(@RequestBody Order order){
         return orderRepository.save(order);
-    }
-    @PutMapping("/modOrder/{orderId}")
+    }{}
 
+    @DeleteMapping("/orders/{orderId}")
+    public Map<String,String>deleteOrder(@PathVariable String orderId ){
+         orderRepository.deleteById(orderId);
+
+        HashMap<String,String> message = new HashMap<>();
+        message.put("response","order "+orderId+" has been deleted");
+         return message;
+    }
+
+    @PutMapping("/orders/{orderId}")
     Order updateOrder(@PathVariable String orderId, @RequestBody Order order){
         Order modOrder = orderRepository.findById(orderId).orElseThrow(
                 () -> new OrderNotFoundException("No se encontró una orden con el orderId: " + orderId));
         /*modOrder. */
-        return orderRepository.save(order);
+
+        modOrder.setDate(order.getDate());
+        modOrder.setTotal(order.getTotal());
+        modOrder.setDetailProducts(order.getDetailProducts());
+        modOrder.setStatus(order.getStatus());
+
+        return orderRepository.save(modOrder);
     }
+
+    @PostMapping("/orders/finish/{orderId}")
+    Object finishOrder(@PathVariable  String orderId){
+        Order modOrder = orderRepository.findById(orderId).orElseThrow(
+                () -> new OrderNotFoundException("No se encontró una orden con el orderId: " + orderId));
+                /*modOrder. */
+
+        HashMap<String,Integer> response = new HashMap<>();
+        modOrder.getDetailProducts().forEach((detail)-> {
+                    response.put(detail.getIdProduct(), detail.getQuantity());
+                }
+                );
+
+
+
+
+        modOrder.setStatus("finished");
+
+        return response;
+
+
+    }
+
+
 
 
 
