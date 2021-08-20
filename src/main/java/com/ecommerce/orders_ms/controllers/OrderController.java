@@ -41,7 +41,7 @@ public class OrderController {
     @PostMapping("/orders")
     Order newOrder(@RequestBody Order order){
         return orderRepository.save(order);
-    }{}
+    }
 
     @DeleteMapping("/orders/{orderId}")
     public Map<String,String>deleteOrder(@PathVariable String orderId ){

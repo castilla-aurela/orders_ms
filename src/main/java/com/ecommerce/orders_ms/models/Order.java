@@ -19,7 +19,7 @@ public class Order {
         this.date = date;
         this.total = total;
         this.detailProducts = detailProducts;
-        this.status = status;
+        this.status = "In Progress";
     }
 
     public String getOrderId() {
