@@ -21,17 +21,25 @@ public class OrderController {
         List<DetailOrder> list= new ArrayList<DetailOrder>();
         list.add(orderDetail1);
 
-        Order order01 = new Order("001", new Date(), 500000, list, "ordered");
+        Order order01 = new Order("001", "001", new Date(), 500000, list, "ordered");
 
         this.orderRepository.save(order01);
 
     }
     @GetMapping("/orders/{orderId}")
-    Order getOrder(@PathVariable String orderId){
+    Order getOrderbyId(@PathVariable String orderId){
 
         return orderRepository.findById(orderId)
                 .orElseThrow(()->new OrderNotFoundException("No se encontró una orden con el orderId: " + orderId));
     }
+
+    @GetMapping("/orders/{userId}")
+    Order getOrder(@PathVariable String userId){
+
+        return orderRepository.findById(userId)
+                .orElseThrow(()->new OrderNotFoundException("No se encontró una orden del siguiente userId: " + userId));
+    }
+
 
     @GetMapping("/orders")
     List<Order> getAllOrders(){
