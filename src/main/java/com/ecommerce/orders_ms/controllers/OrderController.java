@@ -27,14 +27,14 @@ public class OrderController {
 
     }
     @GetMapping("/orders/{orderId}")
-    Order getOrderbyId(@PathVariable String orderId){
+    Order getOrder(@PathVariable String orderId){
 
         return orderRepository.findById(orderId)
                 .orElseThrow(()->new OrderNotFoundException("No se encontró una orden con el orderId: " + orderId));
     }
 
     @GetMapping("/orders/{userId}")
-    Order getOrder(@PathVariable String userId){
+    Order getOrderbyId(@PathVariable String userId){
 
         return orderRepository.findById(userId)
                 .orElseThrow(()->new OrderNotFoundException("No se encontró una orden del siguiente userId: " + userId));
