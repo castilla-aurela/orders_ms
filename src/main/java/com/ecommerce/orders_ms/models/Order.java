@@ -8,16 +8,18 @@ import java.util.List;
 
 public class Order {
     @Id
-    private String userId;
+    
     private String orderId;
+    private String userId;
     private Date date;
     private Integer total;
     private List<DetailOrder> detailProducts;
     private String status;
 
-    public Order(String userId, String orderId, Date date, Integer total, List<DetailOrder> detailProducts, String status) {
-        this.userId = userId;
+    public Order(String orderId, String userId, Date date, Integer total, List<DetailOrder> detailProducts, String status) {
+        
         this.orderId = orderId;
+        this.userId = userId;
         this.date = date;
         this.total = total;
         this.detailProducts = detailProducts;
