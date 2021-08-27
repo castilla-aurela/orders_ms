@@ -33,6 +33,7 @@ public class OrderController {
                 .orElseThrow(()->new OrderNotFoundException("No se encontró una orden con el orderId: " + orderId));
     }
 
+    /* Get Order by UserId*/
     @GetMapping("/ordersbyuserId/{userId}")
     List<Order> getOrderbyId(@PathVariable String userId){
 
@@ -40,6 +41,13 @@ public class OrderController {
               /*  .orElseThrow(()->new OrderNotFoundException("No se encontró una orden del siguiente userId: " + userId));*/
     }
 
+    /* Get Order by Status*/
+    @GetMapping("/ordersbystatus/{status}")
+    List<Order> getOrderbyStatus(@PathVariable String status){
+
+        return orderRepository.findByStatus(status);
+              /*  .orElseThrow(()->new OrderNotFoundException("No se encontró una orden del siguiente userId: " + userId));*/
+    }
 
     @GetMapping("/orders")
     List<Order> getAllOrders(){
@@ -70,6 +78,7 @@ public class OrderController {
         modOrder.setTotal(order.getTotal());
         modOrder.setDetailProducts(order.getDetailProducts());
         modOrder.setStatus(order.getStatus());
+        modOrder.setUserId(order.getUserId());
 
         return orderRepository.save(modOrder);
     }
@@ -79,19 +88,15 @@ public class OrderController {
         Order modOrder = orderRepository.findById(orderId).orElseThrow(
                 () -> new OrderNotFoundException("No se encontró una orden con el orderId: " + orderId));
                 /*modOrder. */
-
+        /*
         HashMap<String,Integer> response = new HashMap<>();
         modOrder.getDetailProducts().forEach((detail)-> {
                     response.put(detail.getIdProduct(), detail.getQuantity());
                 }
-                );
-
-
-
-
+                ); */
         modOrder.setStatus("finished");
 
-        return response;
+        return orderId;
 
 
     }
