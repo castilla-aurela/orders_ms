@@ -4,7 +4,11 @@ import com.ecommerce.orders_ms.exceptions.OrderNotFoundException;
 import com.ecommerce.orders_ms.models.DetailOrder;
 import com.ecommerce.orders_ms.models.Order;
 import com.ecommerce.orders_ms.repositories.OrderRepository;
+
+import org.apache.tomcat.InstrumentableClassLoader;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
+import static java.util.Objects.isNull;
 
 import java.util.*;
 
@@ -42,21 +46,39 @@ public class OrderController {
     }
 
     /* Get Order by Status*/
+    /*
     @GetMapping("/ordersbystatus/{status}")
     List<Order> getOrderbyStatus(@PathVariable String status){
 
         return orderRepository.findByStatus(status);
-              /*  .orElseThrow(()->new OrderNotFoundException("No se encontró una orden del siguiente userId: " + userId));*/
+              /*  .orElseThrow(()->new OrderNotFoundException("No se encontró una orden del siguiente userId: " + userId));
     }
+    */
 
     @GetMapping("/orders")
     List<Order> getAllOrders(){
         return orderRepository.findAll();
     }
 
+    /* Create Order*/
     @PostMapping("/orders")
     Order newOrder(@RequestBody Order order){
+       //Order  prevOrder = orderRepository.findByStatusAndUserId("In Progress", order.getUserId());
+       //System.out.print(prevOrder);
+       
+      /* if (!isNull(prevOrder)){
+        prevOrder.setDate(order.getDate());
+        prevOrder.setTotal(order.getTotal());
+        prevOrder.setDetailProducts(order.getDetailProducts());
+        prevOrder.setStatus(order.getStatus());
+        prevOrder.setUserId(order.getUserId());
+        prevOrder.setOrderId(order.getOrderId());
+        System.out.print("LISTO");
+        //return prevOrder;
+        return orderRepository.(prevOrder);
+       }*/
         return orderRepository.save(order);
+        //return 1;
     }
 
     @DeleteMapping("/orders/{orderId}")
@@ -79,6 +101,7 @@ public class OrderController {
         modOrder.setDetailProducts(order.getDetailProducts());
         modOrder.setStatus(order.getStatus());
         modOrder.setUserId(order.getUserId());
+        modOrder.setOrderId(order.getOrderId());
 
         return orderRepository.save(modOrder);
     }
@@ -88,16 +111,9 @@ public class OrderController {
         Order modOrder = orderRepository.findById(orderId).orElseThrow(
                 () -> new OrderNotFoundException("No se encontró una orden con el orderId: " + orderId));
                 /*modOrder. */
-        /*
-        HashMap<String,Integer> response = new HashMap<>();
-        modOrder.getDetailProducts().forEach((detail)-> {
-                    response.put(detail.getIdProduct(), detail.getQuantity());
-                }
-                ); */
+       System.out.print("Prueba");
         modOrder.setStatus("finished");
-
-        return orderId;
-
+        return orderRepository.save(modOrder);
 
     }
 

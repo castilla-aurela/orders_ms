@@ -8,5 +8,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 public interface OrderRepository extends MongoRepository<Order, String> {
 
     List <Order> findByUserId(String userId); 
-    List <Order> findByStatus(String status); 
+      Order findByStatusAndUserId(String status, String userId); 
 }
