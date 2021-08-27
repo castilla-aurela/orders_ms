@@ -1,5 +1,7 @@
 package com.ecommerce.orders_ms.controllers;
 
+import com.ecommerce.orders_ms.exceptions.CannotHaveTwoCarts;
+import com.ecommerce.orders_ms.exceptions.CannotHaveTwoCartsException;
 import com.ecommerce.orders_ms.exceptions.OrderNotFoundException;
 import com.ecommerce.orders_ms.models.DetailOrder;
 import com.ecommerce.orders_ms.models.Order;
@@ -10,6 +12,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import static java.util.Objects.isNull;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RestController
@@ -20,14 +23,7 @@ public class OrderController {
     public OrderController(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
 
-        DetailOrder orderDetail1 = new DetailOrder("0001", 12, 50000L, 50000L);
 
-        List<DetailOrder> list= new ArrayList<DetailOrder>();
-        list.add(orderDetail1);
-
-        Order order01 = new Order("008", "006", new Date(), 500000, list, "ordered");
-
-        this.orderRepository.save(order01);
 
     }
     @GetMapping("/orders/{orderId}")
@@ -45,15 +41,13 @@ public class OrderController {
               /*  .orElseThrow(()->new OrderNotFoundException("No se encontró una orden del siguiente userId: " + userId));*/
     }
 
-    /* Get Order by Status*/
-    /*
-    @GetMapping("/ordersbystatus/{status}")
-    List<Order> getOrderbyStatus(@PathVariable String status){
+    /* Get Order by Status and Id*/
 
-        return orderRepository.findByStatus(status);
-              /*  .orElseThrow(()->new OrderNotFoundException("No se encontró una orden del siguiente userId: " + userId));
+    @GetMapping("/orders/{status}/{userId}")
+    List<Order> getOrderbyStatus(@PathVariable String status,@PathVariable String userId) {
+
+        return orderRepository.findByStatusAndUserId(status, userId);
     }
-    */
 
     @GetMapping("/orders")
     List<Order> getAllOrders(){
@@ -63,23 +57,51 @@ public class OrderController {
     /* Create Order*/
     @PostMapping("/orders")
     Order newOrder(@RequestBody Order order){
-       //Order  prevOrder = orderRepository.findByStatusAndUserId("In Progress", order.getUserId());
-       //System.out.print(prevOrder);
-       
-      /* if (!isNull(prevOrder)){
-        prevOrder.setDate(order.getDate());
-        prevOrder.setTotal(order.getTotal());
-        prevOrder.setDetailProducts(order.getDetailProducts());
-        prevOrder.setStatus(order.getStatus());
-        prevOrder.setUserId(order.getUserId());
-        prevOrder.setOrderId(order.getOrderId());
-        System.out.print("LISTO");
-        //return prevOrder;
-        return orderRepository.(prevOrder);
-       }*/
-        return orderRepository.save(order);
-        //return 1;
+       List<Order>  prevOrder = orderRepository.findByStatusAndUserId("In Progress", order.getUserId());
+
+       if(prevOrder.size() >0){
+           Order ordupdt = prevOrder.get(0);
+           return  this.updateOrder(ordupdt.getOrderId(),ordupdt);
+       }
+       return orderRepository.save(order);
+
     }
+
+    @PostMapping("/addCart/{userId}")
+    Order addCart(@RequestBody DetailOrder detailOrder, @PathVariable String userId){
+
+        List<Order>  prevOrder = orderRepository.findByStatusAndUserId("In Progress", userId);
+        boolean exist = true;
+        if(prevOrder.size() >0){
+            Order ordupdt = prevOrder.get(0);
+
+            for (int i = 0; i < ordupdt.getDetailProducts().size(); i++) {
+                if(ordupdt.getDetailProducts().get(i).getIdProduct().equals(detailOrder.getIdProduct())){
+                    ordupdt.getDetailProducts().get(i).setQuantity(ordupdt.getDetailProducts().get(i).getQuantity()+detailOrder.getQuantity());
+                    Long prevSubtotal = ordupdt.getDetailProducts().get(i).getSubTotal();
+                    ordupdt.getDetailProducts().get(i).setSubTotal(ordupdt.getDetailProducts().get(i).getSubTotal()+detailOrder.getSubTotal());
+                    if(ordupdt.getDetailProducts().size()==1){
+                        ordupdt.setTotal(ordupdt.getDetailProducts().get(i).getSubTotal());
+                    }
+                    else if(ordupdt.getDetailProducts().size()>1){
+                        ordupdt.setTotal(ordupdt.getTotal()+ordupdt.getDetailProducts().get(i).getSubTotal()-prevSubtotal);
+                    }
+
+                    return  this.updateOrder(ordupdt.getOrderId(),ordupdt);
+                }
+            }
+            List<DetailOrder> newDetail = ordupdt.getDetailProducts();
+            newDetail.add(detailOrder);
+            ordupdt.setDetailProducts(newDetail);
+            ordupdt.setTotal(ordupdt.getTotal()+detailOrder.getSubTotal());
+            return  this.updateOrder(ordupdt.getOrderId(),ordupdt);
+        }
+     List<DetailOrder> newDetail = new ArrayList<>();
+        newDetail.add(detailOrder);
+    Order createOrder = new Order(null,userId,new Date(), detailOrder.getSubTotal(),newDetail,"In Progress",null);
+        return orderRepository.save(createOrder);
+    }
+
 
     @DeleteMapping("/orders/{orderId}")
     public Map<String,String>deleteOrder(@PathVariable String orderId ){
@@ -102,7 +124,6 @@ public class OrderController {
         modOrder.setStatus(order.getStatus());
         modOrder.setUserId(order.getUserId());
         modOrder.setOrderId(order.getOrderId());
-
         return orderRepository.save(modOrder);
     }
 
@@ -111,7 +132,9 @@ public class OrderController {
         Order modOrder = orderRepository.findById(orderId).orElseThrow(
                 () -> new OrderNotFoundException("No se encontró una orden con el orderId: " + orderId));
                 /*modOrder. */
-       System.out.print("Prueba");
+
+        Date date = new Date();
+        modOrder.setFinishDate(date);
         modOrder.setStatus("finished");
         return orderRepository.save(modOrder);
 

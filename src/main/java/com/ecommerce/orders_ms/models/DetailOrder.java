@@ -3,14 +3,24 @@ package com.ecommerce.orders_ms.models;
 public class DetailOrder {
     private String idProduct;
     private Integer quantity;
+    private String name;
     private Long price;
     private Long subTotal;
 
-    public DetailOrder(String idProduct, Integer quantity, Long price, Long subTotal) {
+    public DetailOrder(String idProduct, Integer quantity, Long price, Long subTotal,String name) {
         this.idProduct = idProduct;
         this.quantity = quantity;
         this.price = price;
+        this.name = name;
         this.subTotal = subTotal;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getIdProduct() {

@@ -12,11 +12,12 @@ public class Order {
     private String orderId;
     private String userId;
     private Date date;
-    private Integer total;
+    private Long total;
     private List<DetailOrder> detailProducts;
     private String status;
+    private Date finishDate;
 
-    public Order(String orderId, String userId, Date date, Integer total, List<DetailOrder> detailProducts, String status) {
+    public Order(String orderId, String userId, Date date, Long total, List<DetailOrder> detailProducts, String status,Date finishDate) {
         
         this.orderId = orderId;
         this.userId = userId;
@@ -24,6 +25,15 @@ public class Order {
         this.total = total;
         this.detailProducts = detailProducts;
         this.status = "In Progress";
+        this.finishDate = finishDate;
+    }
+
+    public Date getFinishDate() {
+        return finishDate;
+    }
+
+    public void setFinishDate(Date finisHDate) {
+        this.finishDate = finisHDate;
     }
 
     public String getUserId() {
@@ -50,11 +60,11 @@ public class Order {
         this.date = date;
     }
 
-    public Integer getTotal() {
+    public Long getTotal() {
         return total;
     }
 
-    public void setTotal(Integer total) {
+    public void setTotal(Long total) {
         this.total = total;
     }
 
