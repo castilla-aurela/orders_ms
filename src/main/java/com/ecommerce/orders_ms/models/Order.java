@@ -24,7 +24,7 @@ public class Order {
         this.date = date;
         this.total = total;
         this.detailProducts = detailProducts;
-        this.status = "In Progress";
+        this.status = status;
         this.finishDate = finishDate;
     }
 

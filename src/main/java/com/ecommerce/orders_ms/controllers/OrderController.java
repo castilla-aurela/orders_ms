@@ -63,6 +63,7 @@ public class OrderController {
            Order ordupdt = prevOrder.get(0);
            return  this.updateOrder(ordupdt.getOrderId(),ordupdt);
        }
+       order.setStatus("In Progress"); 
        return orderRepository.save(order);
 
     }
